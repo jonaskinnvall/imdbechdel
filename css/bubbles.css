@@ -1,0 +1,26 @@
+ext {
+  font: 10px sans-serif;
+  text-anchor: middle;
+}
+
+.node circle {
+  fill: none;
+  pointer-events: all;
+}
+
+.node:not(.node--leaf) circle {
+  stroke: #aaa;
+}
+
+.node--root circle {
+  fill: #fff;
+}
+
+.node--leaf circle {
+  fill: #ddd;
+}
+
+.node--hover circle {
+  stroke: #000 !important;
+  stroke-width: 1.5px;
+}
