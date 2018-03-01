@@ -8,7 +8,10 @@ function bubbles(data){
 
 	data.forEach(function(d) {
     d.budget = +d.budget;
+    d.bechdel_rating = +d.bechdel_rating;
+
  	});
+
 
 	var maxbudget = d3.max(data, function(d) { 
 		//console.log(d.budget)
@@ -24,14 +27,48 @@ function bubbles(data){
     	.attr("transform", "translate(" + width/2 + "," +height/2+")");
 
     var radiusScale = d3.scaleSqrt().domain([1, maxbudget])
-    .range([1,30]);
+    .range([2,30]);
 
     console.log(maxbudget)
 
+    var forceX = d3.forceX(function(d){
+    	if(d.bechdel_rating == 0){
+    		return width/4
+    	}
+    	else if (d.bechdel_rating == 1){
+    		return -width/4
+    	}
+    	else if (d.bechdel_rating == 2){
+    		return width/4
+    	}
+    	else {
+    		return -width/4
+    	}
+    }).strength(0.1)
+
+    var forceY = d3.forceY(function(d){
+    	if(d.bechdel_rating == 0){
+    		return height/4
+    	}
+    	else if (d.bechdel_rating == 1){
+    		return height/4
+    	}
+    	else if (d.bechdel_rating == 2){
+    		return -height/4
+    	}
+    	else {
+    		return -height/4
+    	}
+    }).strength(0.1)
+
+    var forceCollide = d3.forceCollide(function(d){
+    	return radiusScale(d.budget) + 1
+     })
+
     var simulation = d3.forceSimulation()
-    .force("x", d3.forceX().strength(0.01))
-    .force("y", d3.forceY().strength(0.01))
-    .force("collide", d3.forceCollide(function(d){return radiusScale(d.budget) + 1}))
+    .force("x", forceX)
+    .force("y", forceY)
+    .force("collide", forceCollide)
 
 
     var circles = svg.selectAll(".budget")
@@ -44,6 +81,10 @@ function bubbles(data){
     	.attr("fill", "lightblue")
     	.on("click", function(d){
     		console.log(d);
+    	})
+
+    	d3.select("#bechdel").on("click", function(){
+    		console.log("you are stupid, this doesnt work yet")
     	})
 
     	simulation.nodes(data)
