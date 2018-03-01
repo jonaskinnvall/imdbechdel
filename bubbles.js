@@ -27,8 +27,8 @@ function bubbles(data){
 
     var root = d3.hierarchy(data)
       .each(function(d) { if (/^other[0-9]+$/.test(d.data.movie_title)) d.data.movie_title = null; })
-      .sum(function(d) { return d.bechdel_rating; })
-      .sort(function(a, b) { return b.genres - a.genres; });
+      .sum(function(d) { return d.size; })
+      .sort(function(a, b) { return b.value - a.value; });
 
        pack(root);
 
