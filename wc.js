@@ -8,20 +8,37 @@ function wc(data){
 
     let parentWidth = $(div).parent().width();
     let margin = {top: 0, right: 0, bottom: 0, left: 0},
-        width = parentWidth - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
-
+        // width = parentWidth - margin.left - margin.right,
+        // height = 500 - margin.top - margin.bottom;
+        width = 600, height = 600;
     //Set colors
     // let colors = colorbrewer.Set3[5];
     let color = d3.scaleOrdinal(d3.schemeCategory20);
 
     //Split string of words into array of strings and keep track of the word count
     // let wordString = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ";
-    let wordString = data[0].plot_keywords;
+    let wordString = "";
+    let tempData = data.forEach(function(d){
+        
+        let tempStr = d.plot_keywords;
+
+        wordString = wordString + " " + tempStr;
+
+    })
     
+    console.log(wordString);
+
+    // function ch(data){
+    //     for(i){
+    //         if(wordString[i] == )
+    //     }
+    // }
+    
+
     let wordCount = {};
 
-    let words = wordString.split("|");
+    let words = wordString.split(/[ '\-\(\)\*":;\[\]|{},.!?]+/);
+    console.log(words)
     // console.log(wordCount)
     // console.log(data);
     // console.log(wordString);
@@ -46,7 +63,7 @@ function wc(data){
 
     let fontScale = d3.scaleLinear()
         .domain([0, d3.max(wordEntries, function(d){return d.value;})])
-        .range([10,100]);
+        .range([1,50]);
 
 
     d3.layout.cloud().size([width, height])
@@ -59,7 +76,7 @@ function wc(data){
     .on("end", draw)
     .start();
 
-    function draw(){
+    function draw(words){
         d3.select(div).append("svg")
         .attr("width", width)
         .attr("height", height)
@@ -72,7 +89,7 @@ function wc(data){
         .style("font-family", "Impact")
         .style("fill", function(d, i) { return color(i); })
         .attr("text-anchor", "middle")
-        .attr("transform", function(d) { console.log(d); 
+        .attr("transform", function(d) {
         return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
         })
         .text(function(d) { return d.key; });
