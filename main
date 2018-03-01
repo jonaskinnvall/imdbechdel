@@ -1,4 +1,0 @@
-queue()
-.defer(d3.csv,'Bechdel_dataset/bechdel_allmovies.csv')
-.defer(d3.csv,'IMDB_movies/imdb_movie_metadata.csv')
-.await(draw);
