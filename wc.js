@@ -45,6 +45,7 @@ function wc(data){
     // console.log(words);
     if(words.length == 1){
         wordCount[words[0]] = 1;
+       
     }
     else{
         words.forEach(function(word){
