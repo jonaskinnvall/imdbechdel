@@ -5,6 +5,8 @@ function bubbles(data){
 
 
 	var width = 600, height = 600;
+	var alphaTar = 5;
+	var str = 0.01
 
 	data.forEach(function(d) {
     d.budget = +d.budget;
@@ -31,7 +33,7 @@ function bubbles(data){
 
     console.log(maxbudget)
 
-    var forceX = d3.forceX(function(d){
+    var forceX1 = d3.forceX(function(d){
     	if(d.bechdel_rating == 0){
     		return width/4
     	}
@@ -41,12 +43,15 @@ function bubbles(data){
     	else if (d.bechdel_rating == 2){
     		return width/4
     	}
-    	else {
+    	else if (d.bechdel_rating ==3){
     		return -width/4
     	}
-    }).strength(0.1)
+    	else{
+    		return 0
+    	}
+    }).strength(str)
 
-    var forceY = d3.forceY(function(d){
+    var forceY1 = d3.forceY(function(d){
     	if(d.bechdel_rating == 0){
     		return height/4
     	}
@@ -56,18 +61,21 @@ function bubbles(data){
     	else if (d.bechdel_rating == 2){
     		return -height/4
     	}
-    	else {
+    	else if (d.bechdel_rating == 3){
     		return -height/4
     	}
-    }).strength(0.1)
+    	else{
+    		return 0
+    	}
+    }).strength(str)
 
     var forceCollide = d3.forceCollide(function(d){
     	return radiusScale(d.budget) + 1
      })
 
     var simulation = d3.forceSimulation()
-    .force("x", forceX)
-    .force("y", forceY)
+    .force("x", d3.forceX().strength(str))
+    .force("y", d3.forceY().strength(str))
     .force("collide", forceCollide)
 
 
@@ -83,12 +91,27 @@ function bubbles(data){
     		console.log(d);
     	})
 
-    	d3.select("#bechdel").on("click", function(){
-    		console.log("you are stupid, this doesnt work yet")
-    	})
+    d3.select("#bechdel").on("click", function(){
+    	simulation.force("x", forceX1)
+    		.force("y", forceY1)
+    		.alphaTarget(alphaTar)
+    		.restart()
 
-    	simulation.nodes(data)
-    	.on('tick', tick)
+    	console.log("you are stupid, this doesnt work yet")
+    })
+
+    d3.select("#normal").on("click", function(){
+    	simulation
+    		.force("x", d3.forceX().strength(str))
+    		.force("y", d3.forceY().strength(str))
+    		.alphaTarget(alphaTar)
+    		.restart()
+
+    	console.log("you dick")
+    })
+
+    simulation.nodes(data)
+    .on('tick', tick)
 
     function tick(){
     	circles
