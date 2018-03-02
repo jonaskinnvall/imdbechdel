@@ -6,78 +6,71 @@ function wc(data){
 
     let div = '#wc';
 
-    // let parentWidth = $(div).parent().width();
-    // let margin = {top: 0, right: 0, bottom: 0, left: 0},
-    //     width = parentWidth - margin.left - margin.right,
-    //     height = 500 - margin.top - margin.bottom;
     let width = 600, height = 600;
+    
     //Set colors
-    // let colors = colorbrewer.Set3[5];
     let color = d3.scaleOrdinal(d3.schemeCategory20);
 
-    //Split string of words into array of strings and keep track of the word count
-   // let wordString = data[62].plot_keywords;
-    
-     let wordString = "";
+    //Create initial string of evere plot keyword in dataset
+    let wordString = "";
 
     let tempData = data.forEach(function(d){
         
-         let tempStr = d.plot_keywords;
+        let tempStr = d.plot_keywords;
 
-         wordString = wordString + tempStr;
+        wordString = wordString + tempStr;
 
-     })
+    })
 
 
     
-    //onsole.log(wordString);
-    //console.log(data);
+    //Call function drawcloud
     drawcloud(wordString);
-    
+
+
     function drawcloud(wordString){
-    let wordCount = {};
+        //Remove earlier elements from div
+        d3.select(div).selectAll("*").remove();
+        
 
-    let words = wordString.split(/[ '\-\(\)\*":;\[\]|{},.!?]+/);
-    // console.log(words)
-    // console.log(wordCount)
-    // console.log(data);
-    // console.log(wordString);
-    // console.log(words);
-    if(words.length == 1){
-        wordCount[words[0]] = 1;
-       
-    }
-    else{
-        words.forEach(function(word){
-            if(word != "" && word.length > 1)
-                if(wordCount[word]){
-                    wordCount[word]++;
-                }
-                else{
-                    wordCount[word] = 1;
-                }
-        })
-        // console.log(wordCount)
-    }
+        //Create wordcloud
+        let wordCount = {};
 
-    let wordEntries = d3.entries(wordCount);
+        let words = wordString.split(/[ '\-\(\)\*":;\[\]|{},.!?]+/);
 
-    let fontScale = d3.scaleLinear()
-        .domain([0, d3.max(wordEntries, function(d){return d.value;})])
-        .range([1,50]);
+        if(words.length == 1){
+            wordCount[words[0]] = 1;
+        }
+        else{
+            words.forEach(function(word){
+                if(word != "" && word.length > 1)
+                    if(wordCount[word]){
+                        wordCount[word]++;
+                    }
+                    else{
+                        wordCount[word] = 1;
+                    }
+            })
+        }
 
+        let wordEntries = d3.entries(wordCount);
 
-    d3.layout.cloud().size([width, height])
-    .timeInterval(20)
-    .words(wordEntries)
-    .fontSize(function(d) { return fontScale(+d.value); })
-    .text(function(d) { return d.key; })
-    .rotate(function() { return ~~(Math.random() * 2) * 90; })
-    .font("Impact")
-    .on("end", draw)
-    .start();
-    
+        let fontScale = d3.scaleLinear()
+            .domain([0, d3.max(wordEntries, function(d){return d.value;})])
+            .range([1,50]);
 
+        //Call lib-file to create wordcloud, call draw
+        d3.layout.cloud().size([width, height])
+        .timeInterval(20)
+        .words(wordEntries)
+        .fontSize(function(d) { return fontScale(+d.value); })
+        .text(function(d) { return d.key; })
+        .rotate(function() { return ~~(Math.random() * 2) * 90; })
+        .font("Impact")
+        .on("end", draw)
+        .start();
+        
+        //Draw wordcloud onto div
         function draw(words){
             d3.select(div).append("svg")
             .attr("width", width)
@@ -96,18 +89,15 @@ function wc(data){
             })
             .text(function(d) { return d.key; });
         }
-         d3.layout.cloud().stop();
+            
+        d3.layout.cloud().stop();
     }    
 
+    //Change data to choosen data in bubbles and call drawcloud again
     this.chooseWords = function(data){
-            wordString = "";
-
-            wordString += data;
-            console.log(wordString);
-             
-            drawcloud(wordString);
-
-
+            
+        wordString = "";
+        wordString += data;    
+        drawcloud(wordString);
     }
-
 }
