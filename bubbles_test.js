@@ -19,7 +19,7 @@ function bubbles_test(data){
 
     var root = d3.hierarchy(data)
       .each(function(d) { if (/^other[0-9]+$/.test(d.data.name)) d.data.name = null; })
-      .sum(function(d) { return d.size; })
+      .sum(function(d) { return d.budget; })
       .sort(function(a, b) { return b.value - a.value; });
 
 

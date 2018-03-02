@@ -16,28 +16,25 @@ function wc(data){
     let color = d3.scaleOrdinal(d3.schemeCategory20);
 
     //Split string of words into array of strings and keep track of the word count
-    let wordString = data[62].plot_keywords;
+   // let wordString = data[62].plot_keywords;
     
-    // let wordString = "";
+     let wordString = "";
 
-    // let tempData = data.forEach(function(d){
+    let tempData = data.forEach(function(d){
         
-    //     let tempStr = d.plot_keywords;
+         let tempStr = d.plot_keywords;
 
-    //     wordString = wordString + tempStr;
+         wordString = wordString + tempStr;
 
-    // })
+     })
 
-    // function chooseWords(data){
-    //     for(let i = 0; i < data.length; i++){
-    //         wordString += data[i].plot_keywords;
-    //     }
-    // }
+
     
-    console.log(wordString);
-    console.log(data);
+    //onsole.log(wordString);
+    //console.log(data);
+    drawcloud(wordString);
     
-
+    function drawcloud(wordString){
     let wordCount = {};
 
     let words = wordString.split(/[ '\-\(\)\*":;\[\]|{},.!?]+/);
@@ -78,26 +75,38 @@ function wc(data){
     .font("Impact")
     .on("end", draw)
     .start();
+    
 
-    function draw(words){
-        d3.select(div).append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .append("g")
-        .attr("transform", "translate(" + [width >> 1, height >> 1] + ")")
-        .selectAll("text")
-        .data(words)
-        .enter().append("text")
-        .style("font-size", function(d) { return fontScale(d.value) + "px"; })
-        .style("font-family", "Impact")
-        .style("fill", function(d, i) { return color(i); })
-        .attr("text-anchor", "middle")
-        .attr("transform", function(d) {
-        return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-        })
-        .text(function(d) { return d.key; });
+        function draw(words){
+            d3.select(div).append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", "translate(" + [width >> 1, height >> 1] + ")")
+            .selectAll("text")
+            .data(words)
+            .enter().append("text")
+            .style("font-size", function(d) { return fontScale(d.value) + "px"; })
+            .style("font-family", "Impact")
+            .style("fill", function(d, i) { return color(i); })
+            .attr("text-anchor", "middle")
+            .attr("transform", function(d) {
+            return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+            })
+            .text(function(d) { return d.key; });
+        }
+         d3.layout.cloud().stop();
+    }    
+
+    this.chooseWords = function(data){
+            wordString = "";
+
+            wordString += data;
+            console.log(wordString);
+             
+            drawcloud(wordString);
+
+
     }
-
-    d3.layout.cloud().stop();
 
 }

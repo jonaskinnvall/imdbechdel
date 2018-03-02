@@ -88,8 +88,8 @@ function bubbles(data){
     	})
     	.attr("fill", "lightblue")
     	.on("click", function(d){
-			sectionToSend(d);
-    		console.log(d);
+			sectionToSend(d.plot_keywords);
+    		console.log(d.plot_keywords);
     	})
 
     d3.select("#bechdel").on("click", function(){
@@ -98,7 +98,7 @@ function bubbles(data){
     		.alphaTarget(alphaTar)
     		.restart()
 
-    	console.log("you are stupid, this doesnt work yet")
+    	//console.log("you are stupid, this doesnt work yet")
     })
 
     d3.select("#normal").on("click", function(){
@@ -108,7 +108,7 @@ function bubbles(data){
     		.alphaTarget(alphaTar)
     		.restart()
 
-    	console.log("you dick")
+    	//console.log("you dick")
     })
 
     simulation.nodes(data)
