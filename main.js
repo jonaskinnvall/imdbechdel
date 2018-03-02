@@ -8,7 +8,7 @@ var bubbles;
 function draw(error, data){
     if (error) throw error;
 
-bubbles = new bubbles(data);
+bubbles = new bubbles_test(data);
 wc = new wc(data);
 
 }
