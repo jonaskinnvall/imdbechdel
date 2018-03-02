@@ -88,6 +88,7 @@ function bubbles(data){
     	})
     	.attr("fill", "lightblue")
     	.on("click", function(d){
+			sectionToSend(d);
     		console.log(d);
     	})
 
@@ -123,6 +124,9 @@ function bubbles(data){
     		})
     }
 
+	function sectionToSend(data){
+		wc.chooseWords(data);
+	}
 
     
 }

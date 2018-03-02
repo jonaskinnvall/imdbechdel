@@ -16,32 +16,32 @@ function wc(data){
     let color = d3.scaleOrdinal(d3.schemeCategory20);
 
     //Split string of words into array of strings and keep track of the word count
-    function chooseWords(data){
-
-    }
-    let wordString = "";
-
-    let tempData = data.forEach(function(d){
-        
-        let tempStr = d.plot_keywords;
-
-        wordString = wordString + tempStr;
-
-    })
+    let wordString = data[62].plot_keywords;
     
-    console.log(wordString);
+    // let wordString = "";
 
-    // function ch(data){
-    //     for(i){
-    //         if(wordString[i] == )
+    // let tempData = data.forEach(function(d){
+        
+    //     let tempStr = d.plot_keywords;
+
+    //     wordString = wordString + tempStr;
+
+    // })
+
+    // function chooseWords(data){
+    //     for(let i = 0; i < data.length; i++){
+    //         wordString += data[i].plot_keywords;
     //     }
     // }
+    
+    console.log(wordString);
+    console.log(data);
     
 
     let wordCount = {};
 
     let words = wordString.split(/[ '\-\(\)\*":;\[\]|{},.!?]+/);
-    console.log(words)
+    // console.log(words)
     // console.log(wordCount)
     // console.log(data);
     // console.log(wordString);
