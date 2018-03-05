@@ -6,9 +6,6 @@ function bubbles_test(data){
 
   var color = d3.scaleOrdinal(d3.schemeCategory20);
 
-
-
-
   var bechdel0 = [], 
       bechdel1 = [], 
       bechdel2 = [], 
@@ -43,10 +40,10 @@ function bubbles_test(data){
        }
     })
 
-bechdelsorted.push(bechdel3)
-bechdelsorted.push(bechdel2)
-bechdelsorted.push(bechdel1)
-bechdelsorted.push(bechdel0)
+    bechdelsorted.push(bechdel3)
+    bechdelsorted.push(bechdel2)
+    bechdelsorted.push(bechdel1)
+    bechdelsorted.push(bechdel0)
     
 
 
