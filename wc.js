@@ -89,13 +89,18 @@ function wc(data){
             })
             .text(function(d) { return d.key; });
         }
+
+
             
         d3.layout.cloud().stop();
+
+
     }    
 
     //Change data to choosen data in bubbles and call drawcloud again
     this.chooseWords = function(data){
             
+            console.log(data)
         wordString = "";
         wordString += data;    
         drawcloud(wordString);

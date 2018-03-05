@@ -6,7 +6,7 @@ function bubbles(data){
 
 	var width = 600, height = 600;
 	var alphaTar = 5;
-	var str = 0.01
+	var str = 0.001
 
 	data.forEach(function(d) {
     d.budget = +d.budget;

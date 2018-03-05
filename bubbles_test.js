@@ -4,6 +4,17 @@ function bubbles_test(data){
 
 	var width = 600, height = 600;
 
+  var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+
+
+
+  var bechdel0 = [], 
+      bechdel1 = [], 
+      bechdel2 = [], 
+      bechdel3 = [],
+      bechdelsorted = [];
+
 	var svg = d3.select("#bubbles")
 		.append("svg")
 		.attr("width", width)
@@ -12,56 +23,84 @@ function bubbles_test(data){
 
     var format = d3.format(",d");
 
+  console.log(data);
+
+    data.forEach(function(d){
+       if(d.bechdel_rating == 0){
+        //console.log("0")
+        bechdel0.push(d)
+       }
+       else if(d.bechdel_rating == 1){
+        //console.log("1")
+        bechdel1.push(d)
+       }
+       else if(d.bechdel_rating == 2){
+        //console.log("2")
+        bechdel2.push(d)
+       }
+       else{
+        //console.log("3")
+        bechdel3.push(d)
+       }
+    })
+    /*console.log(bechdel0)
+    console.log(bechdel1)
+    console.log(bechdel2)
+    console.log(bechdel3)*/
+bechdelsorted.push(bechdel3)
+bechdelsorted.push(bechdel2)
+bechdelsorted.push(bechdel1)
+bechdelsorted.push(bechdel0)
+    
+    
+
+  //console.log(bechdelsorted);
+
+
     var pack = d3.pack()
     .size([width - 2, height - 2])
     .padding(3);
 
-    
+    root = d3.hierarchy({children : bechdelsorted})
+      .sum(function(d) { return d.length; })
+      .sort(function(a, b) { return b.value - a.value; });
 
-    var root = d3.hierarchy(data)
-      .each(function(d) { return d.data.movie_title})
-      .sum(function(d) { return d.imdb_score; })
-      .sort(function(a, b) { return b.bechdel_rating - a.bechdel_rating; });
+    //console.log(root);
 
-    pack(root);
+    var pack = pack(root);
 
-    var node = svg.select("g")
-      .selectAll("g")
-      .data(root.descendants())
+    var node = svg.selectAll(".node")
+      .data(pack.leaves())
       .enter().append("g")
+      .attr("class", "node")
       .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
-      .attr("class", function(d) { return "node" + (!d.children ? " node--leaf" : d.depth ? "" : " node--root"); })
-      .each(function(d) { d.node = this; })
       .on("mouseover", hovered(true))
-      .on("mouseout", hovered(false));
+      .on("mouseout", hovered(false))
+      .on("click", function(d){
+          sectionToSend(d.data.plot_keywords);
+          console.log(d.data.plot_keywords);
+      })
 
+//console.log(pack.leaves())
 
-    node.append("circle")
-      .attr("id", function(d, i) { return "node-" + i; })
-      .attr("r", function(d) { return d.imdb_score; });
+      node.append("circle")
+      .attr("id", function(d) { return d.value; })
+      .attr("r", function(d) { return d.r; })
+      .style("fill", function(d) { return color(d.value); });
 
-    var leaf = node.select(function(d) { return !d.children ? this : null; })
-      .classed("node--leaf", true)
-    .select(function(d) { return d.data.movie_title ? this : null; });
+      node.append("clipPath")
+      .attr("id", function(d) { return "clip-" + d.value; });
 
-    leaf.append("clipPath")
-      .attr("id", function(d, i) { return "clip-" + i; })
-    .append("use")
-      .attr("xlink:href", function(d, i) { return "#node-" + i + ""; });
-
-    leaf.append("text")
-      .style("font-size", function(d) { return Math.sqrt(d.imdb_score) * 2 + "px"; })
-      .attr("clip-path", function(d, i) { return "url(#clip-" + i + ")"; })
-    .selectAll("tspan")
-      .data(function(d) { return d.data.movie_title.split(/\s+/g); })
-    .enter().append("tspan")
-      .attr("x", 0)
-      .attr("y", function(d, i, nodes) { return 1.3 + (i - nodes.length / 2 - 0.5) + "em"; })
-      .text(function(d) { return d; });  
+      node.append("text")
+        .attr("clipPath", function(d){return d.value;})
+        .text(function(d) { return d.movie; });
 
     node.append("title")
-      .text(function(d) { return (d.data.movie_title || "N/A") + "\n" + (d.children ? "" : d.parent.data.name + "\n") + format(d.value); });
-};
+      .text(function(d) { return d.value + "\n" + format(d.value); });
+
+      function sectionToSend(data){
+    wc.chooseWords(data);
+  }
 
 function hovered(hover) {
   return function(d) {
@@ -70,5 +109,12 @@ function hovered(hover) {
       .classed("node--hover", hover);
   };
 }
+
+};
+
+
+
+  
+
 
 
