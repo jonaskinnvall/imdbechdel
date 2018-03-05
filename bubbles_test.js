@@ -23,7 +23,6 @@ function bubbles_test(data){
 
     var format = d3.format(",d");
 
-  console.log(data);
 
     data.forEach(function(d){
        if(d.bechdel_rating == 0){
@@ -43,18 +42,12 @@ function bubbles_test(data){
         bechdel3.push(d)
        }
     })
-    /*console.log(bechdel0)
-    console.log(bechdel1)
-    console.log(bechdel2)
-    console.log(bechdel3)*/
+
 bechdelsorted.push(bechdel3)
 bechdelsorted.push(bechdel2)
 bechdelsorted.push(bechdel1)
 bechdelsorted.push(bechdel0)
     
-    
-
-  //console.log(bechdelsorted);
 
 
     var pack = d3.pack()
@@ -65,9 +58,8 @@ bechdelsorted.push(bechdel0)
       .sum(function(d) { return d.length; })
       .sort(function(a, b) { return b.value - a.value; });
 
-    //console.log(root);
-
     var pack = pack(root);
+    
 
     var node = svg.selectAll(".node")
       .data(pack.leaves())
@@ -76,12 +68,15 @@ bechdelsorted.push(bechdel0)
       .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
       .on("mouseover", hovered(true))
       .on("mouseout", hovered(false))
-      .on("click", function(d){
-          sectionToSend(d.data.plot_keywords);
-          console.log(d.data.plot_keywords);
+      .on("click", function(d,i){
+        let keywordString = ""; 
+        
+        for(i = 0; i < d.data.length; i++){
+            keywordString += d.data[i].plot_keywords;
+        }
+        sectionToSend(keywordString);
       })
 
-//console.log(pack.leaves())
 
       node.append("circle")
       .attr("id", function(d) { return d.value; })
