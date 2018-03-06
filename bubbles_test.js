@@ -40,10 +40,10 @@ function bubbles_test(data){
        }
     })
 
-    bechdelsorted.push(bechdel3)
-    bechdelsorted.push(bechdel2)
-    bechdelsorted.push(bechdel1)
     bechdelsorted.push(bechdel0)
+    bechdelsorted.push(bechdel1)
+    bechdelsorted.push(bechdel2)
+    bechdelsorted.push(bechdel3)
     
 
 
@@ -74,6 +74,7 @@ function bubbles_test(data){
         sectionToSend(keywordString);
       })
 
+      console.log(bechdelsorted)
 
       node.append("circle")
       .attr("id", function(d) { return d.value; })
@@ -85,7 +86,8 @@ function bubbles_test(data){
 
       node.append("text")
         .attr("clipPath", function(d){return d.value;})
-        .text(function(d) { return d.movie; });
+        .attr("dx", function(d){return -50})
+        .text(function(d,i){return "Bechdel rating: " + d.data[i].bechdel_rating})
 
     node.append("title")
       .text(function(d) { return d.value + "\n" + format(d.value); });

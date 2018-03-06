@@ -54,14 +54,31 @@ function wc(data){
 
         let wordEntries = d3.entries(wordCount);
 
+        let realwords = [];
+
+    
+
+        wordEntries.forEach(function(d){
+            if (d.value > 5){
+                realwords.push(d)
+            }
+
+        })
+
+        
+
+    
+
         let fontScale = d3.scaleLinear()
-            .domain([0, d3.max(wordEntries, function(d){return d.value;})])
-            .range([1,50]);
+            .domain([0, d3.max(realwords, function(d){return d.value;})])
+            .range([4,50]);
+
+
 
         //Call lib-file to create wordcloud, call draw
         d3.layout.cloud().size([width, height])
         .timeInterval(20)
-        .words(wordEntries)
+        .words(realwords)
         .fontSize(function(d) { return fontScale(+d.value); })
         .text(function(d) { return d.key; })
         .rotate(function() { return ~~(Math.random() * 2) * 90; })
